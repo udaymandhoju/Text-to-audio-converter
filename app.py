@@ -141,8 +141,8 @@ with st.container(key="container-text-entry"):
             st.write(text[:500] + "...")
 
 # IBM Watson TTS credentials
-apikey = "oamD3B0KQy_iX8LNtEfIzzwhn_R-zqQkmwqebfrDO2LW"  # Replace with your actual API key
-url = "https://api.au-syd.text-to-speech.watson.cloud.ibm.com/instances/6de164ed-aa7c-4ee6-b350-03dd0d0b3932"  # Replace with your actual service URL
+apikey = "tJAuAA1SizvE9MdiMe-frK81dmMTQS4n7dvpXN4N1cKB"  # Replace with your actual API key
+url = "https://api.au-syd.text-to-speech.watson.cloud.ibm.com/instances/9eda3a0b-0d9e-4b31-8d8d-4d8b5223f1f2"  # Replace with your actual service URL
 
 authenticator = IAMAuthenticator(apikey)
 tts = TextToSpeechV1(authenticator=authenticator)
@@ -178,3 +178,4 @@ if 'audio_buffer' in st.session_state:
 else:
     with st.container(key="container-info-message"):
         st.info("Generate audio to see playback controls.")
+
