@@ -3,3 +3,4 @@ ibm-watson==6.1.0
 ibm-cloud-sdk-core==3.24.2
 pdfplumber==0.9.0
 
+
