@@ -1,6 +1,5 @@
 streamlit==1.25.0
 ibm-watson==6.1.0
 ibm-cloud-sdk-core==3.24.2
-pdfplumber==0.9.0
-
-
+pdfplumber==0.11.0
+pillow>=10.0.0
