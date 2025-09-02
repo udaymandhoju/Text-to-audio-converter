@@ -94,8 +94,8 @@ def set_png_as_page_bg(png_file):
     st.markdown(css, unsafe_allow_html=True)
 
 # Set your background image path (replace with your own path)
-image_path = r"C:\Users\udayk\OneDrive\Desktop\texttoaudioibm\bg.jpg"
-set_png_as_page_bg(image_path)
+image_path ="bg.jpg"
+set_png_as_page_bg(bg.jpg)
 
 # Main app title
 st.title("Text to Speech Converter")
@@ -178,5 +178,6 @@ if 'audio_buffer' in st.session_state:
 else:
     with st.container(key="container-info-message"):
         st.info("Generate audio to see playback controls.")
+
 
 
