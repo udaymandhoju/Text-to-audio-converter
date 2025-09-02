@@ -5,105 +5,76 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import io
 import base64
 
-# Set the page title (first Streamlit command)
+# This function applies a simple CSS style for a background color.
+# It replaces the need for an external image file.
+def set_background_style():
+    """Sets a simple gradient background style."""
+    st.markdown("""
+        <style>
+        .stApp {
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: white;
+        }
+        /* Main title, labels and markdown headers white */
+        h1, h2, h3, h4, h5, h6, label, .stMarkdown h1, .stMarkdown h2 {
+            color: white !important;
+        }
+        /* Make radio option labels white */
+        div.stRadio > label > div {
+            color: white !important;
+        }
+        /* Textarea container and input elements with transparent background */
+        div.stTextarea, textarea, input, select {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            border: none !important;
+            border-radius: 8px;
+        }
+        textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1;
+        }
+        .st-emotion-cache-1c7y2re {
+            background-color: transparent !important;
+        }
+        /* Sidebar styling */
+        .stSidebar label,
+        .stSidebar > div > div > label,
+        .stSidebar div[data-testid="stMarkdownContainer"] > p {
+            color: black !important;
+        }
+        .stSidebar div[role="combobox"] {
+            color: black !important;
+        }
+        /* Button styling */
+        button {
+            background-color: rgba(255, 215, 128, 0.85) !important;
+            color: #2f2f2f !important;
+            font-weight: 600;
+            border-radius: 4px;
+            border: none;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: rgba(255, 215, 128, 1) !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+
+# Set the page title and apply the background style
 st.set_page_config(page_title="Text to Speech Converter")
-
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-def set_png_as_page_bg(png_file):
-    bin_str = get_base64_of_bin_file(png_file)
-    css = f"""
-    <style>
-    .stApp {{
-        background-image: url("data:image/png;base64,{bin_str}");
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-    }}
-    /* Main title, labels and markdown headers white */
-    h1, h2, h3, h4, h5, h6, label, .stMarkdown h1, .stMarkdown h2 {{
-        color: white !important;
-    }}
-    /* Make radio option labels for Write Text and Upload File white */
-    div.stRadio > label > div {{
-        color: white !important;
-    }}
-    /* Textarea container and input elements with transparent background */
-    div.stTextarea, textarea, input, select {{
-        background-color: rgba(255, 105, 180, 0.6) !important;
-        color: #333333 !important;
-        border: none !important;
-        border-radius: 8px;
-    }}
-    /* This targets the internal Streamlit component to ensure transparency */
-    .st-emotion-cache-1c7y2re {{
-        background-color: transparent !important;
-    }}
-    textarea::placeholder {{
-        color: rgba(255, 154, 206, 0.8) !important;
-        opacity: 1;
-    }}
-    /* Sidebar labels black except custom header */
-    .stSidebar label, 
-    .stSidebar > div > div > label, 
-    .stSidebar div[data-testid="stMarkdownContainer"] > p {{
-        color: black !important;
-    }}
-    /* Sidebar voice dropdown option text black */
-    .stSidebar div[role="combobox"] {{
-        color: black !important;
-    }}
-    div[data-testid="stVerticalBlock"], div[data-testid="stSidebar"] > div:first-child {{
-        background-color: rgba(0,0,0,0) !important;
-        box-shadow: none !important;
-    }}
-    div[data-testid="container-text-entry"],
-    div[data-testid="container-audio-controls"],
-    div[data-testid="container-download"],
-    div[data-testid="container-info-message"] {{
-        background-color: rgba(0,0,0,0) !important;
-        box-shadow: none !important;
-        padding: 0;
-    }}
-    /* Buttons styling */
-    button {{
-        background-color: rgba(255, 215, 128, 0.85) !important;
-        color: #2f2f2f !important;
-        font-weight: 600;
-        border-radius: 4px;
-        border: none;
-        padding: 6px 12px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }}
-    button:hover {{
-        background-color: rgba(255, 215, 128, 1) !important;
-    }}
-    .custom-audio-header {{
-        color: black !important;
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 0.5em;
-    }}
-    </style>
-    """
-    st.markdown(css, unsafe_allow_html=True)
-
-# Set your background image path (replace with your own path)
-image_path ="bg.jpg"
-set_png_as_page_bg("bg.jpg")
+set_background_style()
 
 # Main app title
 st.title("Text to Speech Converter")
 
-# Sidebar header with custom black color
-st.sidebar.markdown('<div class="custom-audio-header">Audio Customization</div>', unsafe_allow_html=True)
-
-# Sidebar inputs
+# Sidebar for audio customization
+st.sidebar.title("Audio Customization")
 voice = st.sidebar.selectbox("Select Voice", [
     "en-US_AllisonV3Voice",
     "en-US_LisaVoice",
@@ -111,13 +82,13 @@ voice = st.sidebar.selectbox("Select Voice", [
     "en-GB_KateV3Voice",
     "es-ES_EnriqueV3Voice"
 ])
-
 pitch = st.sidebar.slider("Pitch (%)", -50, 50, 0)
 
+# Input mode selection
 input_mode = st.radio("Input Mode:", ["Write Text", "Upload File"])
-
 text = ""
 
+# Function to extract text from a PDF file
 def extract_text_from_pdf(pdf_file):
     text = ""
     with pdfplumber.open(pdf_file) as pdf:
@@ -127,7 +98,8 @@ def extract_text_from_pdf(pdf_file):
                 text += pt + "\n"
     return text
 
-with st.container(key="container-text-entry"):
+# Container for text input or file uploader
+with st.container():
     if input_mode == "Write Text":
         text = st.text_area("Enter text here", height=250)
     elif input_mode == "Upload File":
@@ -140,45 +112,37 @@ with st.container(key="container-text-entry"):
             st.subheader("Extracted Text Preview")
             st.write(text[:500] + "...")
 
-# IBM Watson TTS credentials
-apikey = "pHmW-cWHbi-uA4l9TBJWeEG34_ELLk5crXaQQfNK2HSW"  # Replace with your actual API key
-url = "https://api.au-syd.text-to-speech.watson.cloud.ibm.com/instances/4718a086-a601-49de-8682-3c2cc846c54e"  # Replace with your actual service URL
+# IBM Watson Text to Speech credentials
+# IMPORTANT: Replace these with your actual credentials.
+# Do not share them publicly.
+apikey = "pHmW-cWHbi-uA4l9TBJWeEG34_ELLk5crXaQQfNK2HSW"
+url = "https://api.au-syd.text-to-speech.watson.cloud.ibm.com/instances/4718a086-a601-49de-8682-3c2cc846c54e"
 
 authenticator = IAMAuthenticator(apikey)
 tts = TextToSpeechV1(authenticator=authenticator)
 tts.set_service_url(url)
 
+# Button to generate the audiobook
 if st.button("Generate Audiobook") and text.strip():
     with st.spinner("Generating audio..."):
+        # SSML for controlling pitch
         ssml_text = f"""<speak><prosody pitch="{pitch}%">{text}</prosody></speak>"""
-        response = tts.synthesize(ssml_text, accept="audio/wav", voice=voice).get_result()
-        audio_bytes = response.content
-        st.session_state['audio_buffer'] = io.BytesIO(audio_bytes)
+        try:
+            response = tts.synthesize(ssml_text, accept="audio/wav", voice=voice).get_result()
+            audio_bytes = response.content
+            st.session_state['audio_buffer'] = io.BytesIO(audio_bytes)
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+            st.session_state.pop('audio_buffer', None)
 
-if 'audio_buffer' in st.session_state:
-    with st.container(key="container-audio-controls"):
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("Play Audio"):
-                st.audio(st.session_state['audio_buffer'])
-                st.session_state['audio_buffer'].seek(0)
-        with col2:
-            if st.button("Stop Audio"):
-                st.session_state.pop('audio_buffer', None)
-                st.experimental_rerun()
-
-    with st.container(key="container-download"):
-        if 'audio_buffer' in st.session_state:
-            st.download_button(
-                label="Download Audiobook",
-                data=st.session_state['audio_buffer'],
-                file_name="audiobook.wav",
-                mime="audio/wav"
-            )
+# Audio playback and download controls
+if 'audio_buffer' in st.session_state and st.session_state['audio_buffer']:
+    st.audio(st.session_state['audio_buffer'], format="audio/wav")
+    st.download_button(
+        label="Download Audiobook",
+        data=st.session_state['audio_buffer'],
+        file_name="audiobook.wav",
+        mime="audio/wav"
+    )
 else:
-    with st.container(key="container-info-message"):
-        st.info("Generate audio to see playback controls.")
-
-
-
-
+    st.info("Generate audio to see playback and download controls.")
